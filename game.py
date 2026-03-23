@@ -20,7 +20,7 @@ class Game:
 
     def input_spins(self, spins):
         self.remaining_tries = self.remaining_tries - 1
-        return self.solution #todo
+        return self.solution.get_energy(spins)
 
     def input_couplings(self, couplings):
-        return self.solution #todo
+        return self.solution.check_couplings(couplings)
