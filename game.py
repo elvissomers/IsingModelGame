@@ -1,6 +1,5 @@
 from enums.inputstate import InputState
 
-
 class Game:
     def __init__(self, solution):
         self.solution = solution

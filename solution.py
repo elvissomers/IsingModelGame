@@ -1,8 +1,4 @@
-from math import floor
-
-
 class Solution:
-    """A class containing all the J's for some Ising model"""
     def __init__(self, couplings, width=2, height=2):
         self.width = width
         self.height = height
