@@ -1,5 +1,6 @@
-def print_hi(name):
-    print(f'Hi, {name}')
+import game_controller
+
 
 if __name__ == '__main__':
-    print_hi('PyCharm')
+    game_controller.start_new_game_2_by_2()
+
