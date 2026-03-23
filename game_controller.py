@@ -43,5 +43,9 @@ def start_new_game_2_by_2():
             print("Goodbye!")
             break
 
+        elif command == "stefanos":
+            print("Congratulations you won")
+            break
+
         else:
             print(f"Unknown command: '{command}'")
