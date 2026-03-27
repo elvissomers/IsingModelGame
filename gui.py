@@ -27,15 +27,26 @@ class ScrollableFrame(tk.Frame):
         self.canvas.pack(side="left", fill="both", expand=True)
         self.scrollbar.pack(side="right", fill="y")
         
+        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+        self.canvas.bind_all("<Button-4>", self._on_mousewheel)
+        self.canvas.bind_all("<Button-5>", self._on_mousewheel)
+        
+    def _on_mousewheel(self, event):
+        if event.num == 4 or event.delta > 0:
+            self.canvas.yview_scroll(-1, "units")
+        elif event.num == 5 or event.delta < 0:
+            self.canvas.yview_scroll(1, "units")
+        
     def _on_canvas_configure(self, event):
         canvas_width = event.width
         self.canvas.itemconfig(self.canvas_window, width=canvas_width)
 
 class SpinGridCanvas(tk.Canvas):
-    def __init__(self, parent, mode="SPINS", height_cells=2, width_cells=2, **kwargs):
+    def __init__(self, parent, mode="SPINS", height_cells=2, width_cells=2, show_arrows=True, **kwargs):
         self.mode = mode
         self.h_cells = height_cells
         self.w_cells = width_cells
+        self.show_arrows = show_arrows
         
         # Initialize arrows pointing UP
         self.spins = [[1]*self.w_cells for _ in range(self.h_cells)] 
@@ -59,9 +70,10 @@ class SpinGridCanvas(tk.Canvas):
         self.delete("all")
         for i in range(self.num_couplings):
             self.draw_coupling(i)
-        for r in range(self.h_cells):
-            for c in range(self.w_cells):
-                self.draw_arrow(r, c)
+        if self.show_arrows:
+            for r in range(self.h_cells):
+                for c in range(self.w_cells):
+                    self.draw_arrow(r, c)
                 
     def get_arrow_center(self, r, c):
         cx = self.margin + c * (self.cell_size + self.gap) + self.cell_size/2
@@ -103,8 +115,7 @@ class SpinGridCanvas(tk.Canvas):
         
     def get_coupling_rect(self, idx):
         num_horiz = self.h_cells * (self.w_cells - 1)
-        w = self.gap * 0.9
-        h = self.gap * 0.7
+        size = self.gap * 0.7
         
         if idx < num_horiz:
             # Horizontal coupling
@@ -116,7 +127,7 @@ class SpinGridCanvas(tk.Canvas):
             
             cx = (c1x + c2x) / 2
             cy = c1y
-            return cx-w/2, cy-h/2, cx+w/2, cy+h/2
+            return cx-size/2, cy-size/2, cx+size/2, cy+size/2
         else:
             # Vertical coupling
             v_idx = idx - num_horiz
@@ -128,7 +139,7 @@ class SpinGridCanvas(tk.Canvas):
             
             cx = c1x
             cy = (c1y + c2y) / 2
-            return cx-h/2, cy-w/2, cx+h/2, cy+w/2
+            return cx-size/2, cy-size/2, cx+size/2, cy+size/2
 
     def draw_coupling(self, idx):
         val = self.couplings[idx]
@@ -260,8 +271,20 @@ class TutorialScreen(tk.Frame):
         title = tk.Label(self, text="Tutorial", font=("Arial", 48, "bold"), bg="#2C3E50", fg="#ECF0F1")
         title.pack(pady=(50, 20))
         
-        placeholder = tk.Label(self, text="Placeholder text for now.\nRules and guides will be written here later.", font=("Arial", 28), bg="#2C3E50", fg="#BDC3C7")
-        placeholder.pack(pady=50)
+        tutorial_text = (
+            "Rules:\n"
+            "• Spins aligned with their coupling constant have energy zero.\n"
+            "• Spins misaligned with their coupling constant have energy one.\n"
+            "• The goal of the game is to find the coupling constants of the grid by\n"
+            "  trying different configurations of spins and using the energy given.\n\n"
+            "Hints:\n"
+            "1) Start with all spins the same to figure out how many negative\n"
+            "   coupling constants there are.\n"
+            "2) It's easier to deduce more information if your new configuration\n"
+            "   has one spin changed from any previous configuration."
+        )
+        content = tk.Label(self, text=tutorial_text, font=("Arial", 22), bg="#2C3E50", fg="#ECF0F1", justify="left")
+        content.pack(pady=30, padx=40)
 
 class GameScreen(tk.Frame):
     def __init__(self, parent, controller):
@@ -340,13 +363,13 @@ class GameScreen(tk.Frame):
         
     def add_spin_grid(self):
         row_frame = tk.Frame(self.scroll_frame.scrollable_frame, bg="#2C3E50", pady=15)
-        row_frame.pack(fill="x", pady=10)
+        row_frame.pack(pady=10)
         
         grid = SpinGridCanvas(row_frame, mode="SPINS", height_cells=self.grid_height, width_cells=self.grid_width)
         grid.pack(side="left", padx=40)
         
         info_frame = tk.Frame(row_frame, bg="#2C3E50")
-        info_frame.pack(side="left", padx=20, fill="y", expand=True)
+        info_frame.pack(side="left", padx=20, fill="y")
         
         info_label = tk.Label(info_frame, text="Energy: ?", font=("Arial", 28, "bold"), bg="#2C3E50", fg="#ECF0F1")
         info_label.pack(anchor="w", pady=(85, 0)) 
@@ -396,7 +419,7 @@ class GameScreen(tk.Frame):
     def submit_couplings(self):
         couplings = self.active_grid.get_couplings()
         if None in couplings:
-            messagebox.showwarning("Incomplete", "Please assign (+ or -) to all 4 lines!\n\nClick the grey blocks between the arrows.")
+            messagebox.showwarning("Incomplete", "Please assign (+ or -) to all bonds!\n\nClick the grey blocks between the arrows.")
             return
             
         correct = self.game.input_couplings(couplings)
@@ -406,9 +429,17 @@ class GameScreen(tk.Frame):
             self.controller.trigger_fireworks()
         else:
             answer = self.game.get_solution().get_couplings()
-            ans_str = ["+" if x==1 else "-" for x in answer]
-            msg = f"This guess is wrong, you lose the game!\n\nThe correct answer was:\n{', '.join(ans_str)}"
-            messagebox.showinfo("Result", msg)
+            
+            top = tk.Toplevel(self.winfo_toplevel())
+            top.title("Game Over")
+            top.configure(bg="#2C3E50")
+            
+            tk.Label(top, text="This guess is wrong, you lose the game!\n\nThe correct couplings were:", font=("Arial", 20, "bold"), bg="#2C3E50", fg="#E74C3C").pack(pady=20, padx=20)
+            
+            ans_grid = SpinGridCanvas(top, mode="LOCKED", height_cells=self.grid_height, width_cells=self.grid_width, show_arrows=False)
+            ans_grid.couplings = answer
+            ans_grid.draw_grid()
+            ans_grid.pack(padx=40, pady=(0, 40))
             
         self.submit_couplings_btn.config(state="disabled")
 
