@@ -3,8 +3,8 @@ from solution import Solution
 
 
 class Game:
-    def __init__(self, couplings):
-        self.solution = Solution(couplings)
+    def __init__(self, couplings, width=2, height=2):
+        self.solution = Solution(couplings, width, height)
         self.input_state = InputState.SPINS
         self.remaining_tries = self.calculate_remaining_tries(couplings)
 

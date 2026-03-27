@@ -32,26 +32,35 @@ class ScrollableFrame(tk.Frame):
         self.canvas.itemconfig(self.canvas_window, width=canvas_width)
 
 class SpinGridCanvas(tk.Canvas):
-    def __init__(self, parent, mode="SPINS", **kwargs):
-        super().__init__(parent, width=220, height=220, bg="#34495E", highlightthickness=0, **kwargs)
+    def __init__(self, parent, mode="SPINS", height_cells=2, width_cells=2, **kwargs):
         self.mode = mode
+        self.h_cells = height_cells
+        self.w_cells = width_cells
+        
         # Initialize arrows pointing UP
-        self.spins = [[1, 1], [1, 1]] 
-        self.couplings = [None, None, None, None]
+        self.spins = [[1]*self.w_cells for _ in range(self.h_cells)] 
+        
+        self.num_couplings = self.h_cells*(self.w_cells-1) + (self.h_cells-1)*self.w_cells
+        self.couplings = [None] * self.num_couplings
         
         self.cell_size = 60
         self.margin = 40
         self.gap = 40
+        
+        cw = 2*self.margin + self.w_cells*self.cell_size + (self.w_cells-1)*self.gap
+        ch = 2*self.margin + self.h_cells*self.cell_size + (self.h_cells-1)*self.gap
+        
+        super().__init__(parent, width=cw, height=ch, bg="#34495E", highlightthickness=0, **kwargs)
         
         self.bind("<Button-1>", self.on_click)
         self.draw_grid()
         
     def draw_grid(self):
         self.delete("all")
-        for i in range(4):
+        for i in range(self.num_couplings):
             self.draw_coupling(i)
-        for r in range(2):
-            for c in range(2):
+        for r in range(self.h_cells):
+            for c in range(self.w_cells):
                 self.draw_arrow(r, c)
                 
     def get_arrow_center(self, r, c):
@@ -93,30 +102,33 @@ class SpinGridCanvas(tk.Canvas):
         self.create_polygon(pts, fill=color, outline="white", width=2, tags=tag, joinstyle=tk.ROUND)
         
     def get_coupling_rect(self, idx):
-        c00x, c00y = self.get_arrow_center(0, 0)
-        c01x, c01y = self.get_arrow_center(0, 1)
-        c10x, c10y = self.get_arrow_center(1, 0)
-        c11x, c11y = self.get_arrow_center(1, 1)
-        
+        num_horiz = self.h_cells * (self.w_cells - 1)
         w = self.gap * 0.9
         h = self.gap * 0.7
         
-        if idx == 0:
-            cx = (c00x + c01x) / 2
-            cy = c00y
+        if idx < num_horiz:
+            # Horizontal coupling
+            r = idx // (self.w_cells - 1)
+            c = idx % (self.w_cells - 1)
+            
+            c1x, c1y = self.get_arrow_center(r, c)
+            c2x, c2y = self.get_arrow_center(r, c + 1)
+            
+            cx = (c1x + c2x) / 2
+            cy = c1y
             return cx-w/2, cy-h/2, cx+w/2, cy+h/2
-        elif idx == 1:
-            cx = c00x
-            cy = (c00y + c10y) / 2
+        else:
+            # Vertical coupling
+            v_idx = idx - num_horiz
+            r = v_idx // self.w_cells
+            c = v_idx % self.w_cells
+            
+            c1x, c1y = self.get_arrow_center(r, c)
+            c2x, c2y = self.get_arrow_center(r + 1, c)
+            
+            cx = c1x
+            cy = (c1y + c2y) / 2
             return cx-h/2, cy-w/2, cx+h/2, cy+w/2
-        elif idx == 2:
-            cx = c01x
-            cy = (c01y + c11y) / 2
-            return cx-h/2, cy-w/2, cx+h/2, cy+w/2
-        elif idx == 3:
-            cx = (c10x + c11x) / 2
-            cy = c10y
-            return cx-w/2, cy-h/2, cx+w/2, cy+h/2
 
     def draw_coupling(self, idx):
         val = self.couplings[idx]
@@ -144,8 +156,8 @@ class SpinGridCanvas(tk.Canvas):
         x, y = event.x, event.y
         
         if self.mode == "SPINS":
-            for r in range(2):
-                for c in range(2):
+            for r in range(self.h_cells):
+                for c in range(self.w_cells):
                     cx, cy = self.get_arrow_center(r, c)
                     if abs(x - cx) < self.cell_size/2 and abs(y - cy) < self.cell_size/2:
                         self.spins[r][c] = 1 - self.spins[r][c]
@@ -154,7 +166,7 @@ class SpinGridCanvas(tk.Canvas):
                         
         elif self.mode == "COUPLINGS":
             # Just listen to the coupling line clicks
-            for i in range(4):
+            for i in range(self.num_couplings):
                 x1, y1, x2, y2 = self.get_coupling_rect(i)
                 if x1 <= x <= x2 and y1 <= y <= y2:
                     current = self.couplings[i]
@@ -189,7 +201,7 @@ class StartMenu(tk.Frame):
         title = tk.Label(center_frame, text="Ising Game", font=("Arial", 64, "bold"), bg="#2C3E50", fg="#ECF0F1")
         title.pack(pady=(0, 50))
         
-        start_btn = tk.Button(center_frame, text="Start New Game", command=lambda: controller.show_frame("GameScreen"), font=("Arial", 24), bg="#3498DB", fg="white", activebackground="#2980B9", relief="flat", padx=20, pady=10, width=15)
+        start_btn = tk.Button(center_frame, text="Start New Game", command=lambda: controller.show_frame("LevelSelectScreen"), font=("Arial", 24), bg="#3498DB", fg="white", activebackground="#2980B9", relief="flat", padx=20, pady=10, width=15)
         start_btn.pack(pady=15)
         
         tutorial_btn = tk.Button(center_frame, text="Tutorial", command=lambda: controller.show_frame("TutorialScreen"), font=("Arial", 24), bg="#F39C12", fg="white", activebackground="#E67E22", relief="flat", padx=20, pady=10, width=15)
@@ -197,6 +209,38 @@ class StartMenu(tk.Frame):
         
         quit_btn = tk.Button(center_frame, text="Quit Game", command=controller.quit_app, font=("Arial", 24), bg="#E74C3C", fg="white", activebackground="#C0392B", relief="flat", padx=20, pady=10, width=15)
         quit_btn.pack(pady=15)
+
+class LevelSelectScreen(tk.Frame):
+    def __init__(self, parent, controller):
+        super().__init__(parent, bg="#2C3E50")
+        self.controller = controller
+        
+        center_frame = tk.Frame(self, bg="#2C3E50")
+        center_frame.place(relx=0.5, rely=0.5, anchor="center")
+        
+        title = tk.Label(center_frame, text="Select Difficulty", font=("Arial", 48, "bold"), bg="#2C3E50", fg="#ECF0F1")
+        title.pack(pady=(0, 40))
+        
+        levels = [
+            ("Level 0 (1x3)", 1, 3),
+            ("Level 1 (2x2)", 2, 2),
+            ("Level 2 (3x2)", 3, 2),
+            ("Level 3 (3x3)", 3, 3)
+        ]
+        
+        for name, h, w in levels:
+            btn = tk.Button(center_frame, text=name, 
+                            command=lambda height=h, width=w: self.start_level(height, width), 
+                            font=("Arial", 20), bg="#3498DB", fg="white", 
+                            activebackground="#2980B9", relief="flat", padx=20, pady=10, width=15)
+            btn.pack(pady=10)
+            
+        back_btn = tk.Button(center_frame, text="Back", command=lambda: controller.show_frame("StartMenu"), font=("Arial", 20), bg="#7F8C8D", fg="white", activebackground="#95A5A6", relief="flat", padx=20, pady=10, width=15)
+        back_btn.pack(pady=(30,0))
+        
+    def start_level(self, height, width):
+        self.controller.frames["GameScreen"].set_dimensions(height, width)
+        self.controller.show_frame("GameScreen")
 
 class TutorialScreen(tk.Frame):
     def __init__(self, parent, controller):
@@ -228,7 +272,14 @@ class GameScreen(tk.Frame):
         self.active_grid = None
         self.grids = []
         
+        self.grid_height = 2
+        self.grid_width = 2
+        
         self.create_layout()
+        
+    def set_dimensions(self, h, w):
+        self.grid_height = h
+        self.grid_width = w
         
     def start_new_game(self):
         # Clear scroll history
@@ -236,8 +287,9 @@ class GameScreen(tk.Frame):
             widget.destroy()
         self.grids.clear()
         
-        solution = random.choices([0, 1], k=4)
-        self.game = Game(solution)
+        num_couplings = self.grid_height*(self.grid_width-1) + (self.grid_height-1)*self.grid_width
+        solution = random.choices([0, 1], k=num_couplings)
+        self.game = Game(solution, width=self.grid_width, height=self.grid_height)
         
         self.submit_spins_btn.config(state="normal")
         self.guess_couplings_btn.config(state="normal")
@@ -290,7 +342,7 @@ class GameScreen(tk.Frame):
         row_frame = tk.Frame(self.scroll_frame.scrollable_frame, bg="#2C3E50", pady=15)
         row_frame.pack(fill="x", pady=10)
         
-        grid = SpinGridCanvas(row_frame, mode="SPINS")
+        grid = SpinGridCanvas(row_frame, mode="SPINS", height_cells=self.grid_height, width_cells=self.grid_width)
         grid.pack(side="left", padx=40)
         
         info_frame = tk.Frame(row_frame, bg="#2C3E50")
@@ -355,7 +407,7 @@ class GameScreen(tk.Frame):
         else:
             answer = self.game.get_solution().get_couplings()
             ans_str = ["+" if x==1 else "-" for x in answer]
-            msg = f"This guess is wrong, you lose the game!\n\nThe correct answer was:\nTop: {ans_str[0]}\nLeft: {ans_str[1]}\nRight: {ans_str[2]}\nBottom: {ans_str[3]}"
+            msg = f"This guess is wrong, you lose the game!\n\nThe correct answer was:\n{', '.join(ans_str)}"
             messagebox.showinfo("Result", msg)
             
         self.submit_couplings_btn.config(state="disabled")
@@ -437,7 +489,7 @@ class App(tk.Tk):
         
         self.frames = {}
         # Initializing the screens
-        for F in (StartMenu, TutorialScreen, GameScreen):
+        for F in (StartMenu, LevelSelectScreen, TutorialScreen, GameScreen):
             page_name = F.__name__
             frame = F(parent=self.container, controller=self)
             self.frames[page_name] = frame

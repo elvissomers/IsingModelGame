@@ -21,27 +21,25 @@ class Solution:
 
     def get_energy(self, spins):
         energy = 0
+        coupling_index = 0
 
-        if spins[0][0] != spins[0][1]:
-            energy += self.couplings[0]
-        else:
-            energy += 1 - self.couplings[0]
+        # Horizontal couplings
+        for r in range(self.height):
+            for c in range(self.width - 1):
+                if spins[r][c] != spins[r][c + 1]:
+                    energy += self.couplings[coupling_index]
+                else:
+                    energy += 1 - self.couplings[coupling_index]
+                coupling_index += 1
 
-        if spins[0][0] != spins[1][0]:
-            energy += self.couplings[1]
-        else:
-            energy += 1 - self.couplings[1]
-
-        if spins[0][1] != spins[1][1]:
-            energy += self.couplings[2]
-        else:
-            energy += 1 - self.couplings[2]
-
-        if spins[1][0] != spins[1][1]:
-            energy += self.couplings[3]
-        else:
-            energy += 1 - self.couplings[3]
+        # Vertical couplings
+        for r in range(self.height - 1):
+            for c in range(self.width):
+                if spins[r][c] != spins[r + 1][c]:
+                    energy += self.couplings[coupling_index]
+                else:
+                    energy += 1 - self.couplings[coupling_index]
+                coupling_index += 1
 
         return energy
-
 
