@@ -1,6 +1,6 @@
-import game_controller
+import gui
 
 
 if __name__ == '__main__':
-    game_controller.start_new_game_2_by_2()
+    gui.start_gui()
 
