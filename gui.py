@@ -273,15 +273,14 @@ class TutorialScreen(tk.Frame):
         
         tutorial_text = (
             "Rules:\n"
-            "• Spins aligned with their coupling constant have energy zero.\n"
-            "• Spins misaligned with their coupling constant have energy one.\n"
-            "• The goal of the game is to find the coupling constants of the grid by\n"
-            "  trying different configurations of spins and using the energy given.\n\n"
+            "• The game has Arrows and Secret Blocks (+ or -).\n"
+            "• A Green Block (+) is happy when its two Arrows point the SAME way.\n"
+            "• A Red Block (-) is happy when its two Arrows point DIFFERENT ways.\n"
+            "• Happy blocks give 0 Energy. Unhappy blocks add 1 to your Energy!\n"
+            "• Your goal is to guess all the secret blocks by tracking your Energy!\n\n"
             "Hints:\n"
-            "1) Start with all spins the same to figure out how many negative\n"
-            "   coupling constants there are.\n"
-            "2) It's easier to deduce more information if your new configuration\n"
-            "   has one spin changed from any previous configuration."
+            "1) Make all Arrows point the same way to count the Red Blocks (-).\n"
+            "2) Try changing just one Arrow at a time to see how the Energy changes!"
         )
         content = tk.Label(self, text=tutorial_text, font=("Arial", 22), bg="#2C3E50", fg="#ECF0F1", justify="left")
         content.pack(pady=30, padx=40)

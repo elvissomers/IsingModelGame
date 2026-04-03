@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      -antigravity-experiment-stefanos
 
 jobs:
   build:
