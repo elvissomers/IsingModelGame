@@ -553,6 +553,3 @@ class App(tk.Tk):
 def start_gui():
     app = App()
     app.mainloop()
-
-if __name__ == "__main__":
-    start_gui()
