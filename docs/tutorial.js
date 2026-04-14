@@ -187,9 +187,7 @@ function renderGrid(gridData, container) {
     
     const numCouplings = height * (width - 1) + (height - 1) * width;
     
-    const drawGrid = () => {
-        gridDiv.innerHTML = '';
-        
+    // Removed drawGrid() wrapping to prevent DOM destruction
         for (let i = 0; i < numCouplings; i++) {
             let center = getCouplingCenter(i, width, height);
             let comp = document.createElement('div');
@@ -211,7 +209,17 @@ function renderGrid(gridData, container) {
                 if (couplings[i] === null) couplings[i] = 1;
                 else if (couplings[i] === 1) couplings[i] = 0;
                 else couplings[i] = null;
-                drawGrid();
+                
+                if (couplings[i] === 1) {
+                    comp.dataset.val = "1";
+                    comp.innerText = "+";
+                } else if (couplings[i] === 0) {
+                    comp.dataset.val = "0";
+                    comp.innerText = "-";
+                } else {
+                    delete comp.dataset.val;
+                    comp.innerText = "";
+                }
             });
             
             gridDiv.appendChild(comp);
@@ -228,15 +236,19 @@ function renderGrid(gridData, container) {
                 arrow.addEventListener('click', () => {
                     if (mode !== 'SPINS') return;
                     spins[r][c] = 1 - spins[r][c];
-                    drawGrid();
+                    
+                    if (spins[r][c] === 1) {
+                        arrow.classList.remove('down');
+                        arrow.classList.add('up');
+                    } else {
+                        arrow.classList.remove('up');
+                        arrow.classList.add('down');
+                    }
                 });
                 
                 gridDiv.appendChild(arrow);
             }
         }
-    };
-    
-    drawGrid();
     wrapper.appendChild(gridDiv);
     
     if (gridData.label) {

@@ -250,7 +250,6 @@ function submitCouplings() {
     
     if (correct) {
         startFireworks();
-        setTimeout(() => alert("Congratulations, you successfully mapped the couplings!"), 500);
     } else {
         showSolutionModal();
     }
@@ -311,12 +310,32 @@ window.addEventListener('resize', resizeCanvas);
 resizeCanvas();
 
 function startFireworks() {
-    for (let i = 0; i < 6; i++) {
+    let youWinMsg = document.createElement('div');
+    youWinMsg.id = 'win-message';
+    youWinMsg.innerText = "YOU WIN!";
+    youWinMsg.style.position = "fixed";
+    youWinMsg.style.top = "50%";
+    youWinMsg.style.left = "50%";
+    youWinMsg.style.transform = "translate(-50%, -50%) scale(0)";
+    youWinMsg.style.fontSize = "8rem";
+    youWinMsg.style.fontWeight = "900";
+    youWinMsg.style.color = "var(--brand-primary)";
+    youWinMsg.style.textShadow = "0 0 20px rgba(139, 92, 246, 0.8), 0 0 40px rgba(59, 130, 246, 0.8)";
+    youWinMsg.style.zIndex = "1000";
+    youWinMsg.style.transition = "transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+    document.body.appendChild(youWinMsg);
+    
+    // Slight delay to allow CSS to register the starting scale(0)
+    setTimeout(() => {
+        youWinMsg.style.transform = "translate(-50%, -50%) scale(1)";
+    }, 50);
+
+    for (let i = 0; i < 20; i++) {
         setTimeout(() => {
-            let x = canvas.width * 0.2 + Math.random() * canvas.width * 0.6;
-            let y = canvas.height * 0.2 + Math.random() * canvas.height * 0.6;
+            let x = canvas.width * 0.1 + Math.random() * canvas.width * 0.8;
+            let y = canvas.height * 0.1 + Math.random() * canvas.height * 0.8;
             createExplosion(x, y);
-        }, i * 400);
+        }, i * 200);
     }
     if (!animFrame) animLoop();
     
@@ -325,20 +344,21 @@ function startFireworks() {
         animFrame = null;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         particles = [];
+        youWinMsg.remove();
         showScreen('start-menu'); // return to menu
-    }, 4000);
+    }, 5000);
 }
 
 function createExplosion(x, y) {
     const colors = ['#F1C40F', '#E74C3C', '#9B59B6', '#3498DB', '#2ECC71', '#FFFFFF'];
-    for(let i=0; i<40; i++) {
+    for(let i=0; i<80; i++) {
         particles.push({
             x: x, y: y,
-            vx: (Math.random() - 0.5) * 15,
-            vy: (Math.random() - 0.5) * 15,
-            size: Math.random() * 5 + 3,
+            vx: (Math.random() - 0.5) * 20,
+            vy: (Math.random() - 0.5) * 20,
+            size: Math.random() * 6 + 4,
             color: colors[Math.floor(Math.random() * colors.length)],
-            life: 100
+            life: 120 + Math.random() * 40
         });
     }
 }

@@ -264,27 +264,36 @@ h2 {
 /* Arrow Component */
 .arrow {
     position: absolute;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+
+.arrow::after {
+    content: "";
     width: calc(var(--cell-size) * 0.4);
     height: calc(var(--cell-size) * 0.8);
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    cursor: pointer;
     clip-path: polygon(50% 0%, 100% 30%, 65% 30%, 65% 100%, 35% 100%, 35% 30%, 0% 30%);
 }
 
-.arrow.up {
+.arrow.up::after {
     background-color: var(--color-up);
-    transform: translate(-50%, -50%) rotate(0deg);
+    transform: rotate(0deg);
 }
 
-.arrow.down {
+.arrow.down::after {
     background-color: var(--color-down);
-    transform: translate(-50%, -50%) rotate(180deg);
+    transform: rotate(180deg);
 }
 
-.arrow:hover {
+.arrow:hover::after {
     filter: brightness(1.2);
-    /* Tiny scale up on top of transform not easily possible when transform also has rotate, 
-       handled via brightness instead */
 }
 
 /* Coupling Component */
