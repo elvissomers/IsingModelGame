@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ising Model Game</title>
-    <meta name="description" content="An interactive web application of the Ising Model Game. Guess spins and map the couplings!">
+    <meta name="description"
+        content="An interactive web application of the Ising Model Game. Guess spins and map the couplings!">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div id="app" class="app-container">
         <!-- Start Menu Screen -->
@@ -34,7 +37,7 @@
         <!-- Game Screen -->
         <section id="game-screen" class="screen game-layout">
             <nav class="top-nav">
-                <button class="btn btn-back" onclick="showScreen('start-menu')">Back to Menu</button>
+                <button class="btn btn-back" onclick="showScreen('level-select')">Back</button>
             </nav>
             <div class="game-body">
                 <!-- Left: Scrollable History of Spins/Grids -->
@@ -47,17 +50,36 @@
                     <h2 class="panel-title">Ising Game</h2>
                     <p class="status-text" id="tries-left">Tries left: 0</p>
                     <div class="panel-actions">
-                        <button class="btn btn-accent pulse" id="btn-submit-spins" onclick="submitSpins()">Submit Spin Guess</button>
+                        <button class="btn btn-accent pulse" id="btn-submit-spins" onclick="submitSpins()">Submit
+                            Spins</button>
                         <hr class="divider" />
-                        <button class="btn btn-warning" id="btn-guess-couplings" onclick="startCouplingsMode()">Guess Couplings</button>
-                        <button class="btn btn-success disabled" id="btn-submit-couplings" onclick="submitCouplings()" disabled>Submit Couplings</button>
+                        <button class="btn btn-warning" id="btn-guess-couplings" onclick="startCouplingsMode()">Guess
+                            Couplings</button>
+                        <button class="btn btn-secondary" id="btn-cancel-couplings" onclick="cancelCouplingsMode()"
+                            style="display: none;">Cancel</button>
+                        <button class="btn btn-success disabled" id="btn-submit-couplings" onclick="submitCouplings()"
+                            disabled>Submit Couplings</button>
                     </div>
                 </aside>
             </div>
         </section>
 
+        <!-- Win Screen -->
+        <section id="win-screen" class="screen">
+            <h2 class="text-green">Congratulations on your win!</h2>
+            <p style="font-size: 1.5rem; margin-bottom: 2rem;">Would you like to try again?</p>
+            <button class="btn btn-primary" onclick="showScreen('level-select')">Play Again</button>
+        </section>
+
+        <!-- Lose Screen -->
+        <section id="lose-screen" class="screen">
+            <h2 class="text-red">You ran out of tries and lost!</h2>
+            <p style="font-size: 1.5rem; margin-bottom: 2rem;">Would you like to try again?</p>
+            <button class="btn btn-primary" onclick="showScreen('level-select')">Play Again</button>
+        </section>
+
     </div>
-    
+
     <!-- Modal for game over / viewing solution -->
     <div id="solution-modal" class="modal">
         <div class="modal-content">
@@ -72,5 +94,15 @@
     <canvas id="fireworks-canvas"></canvas>
 
     <script src="script.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const screenParam = urlParams.get('screen');
+        if (screenParam) {
+            showScreen(screenParam);
+            // Optionally clean up URL so refreshing doesn't stick
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    </script>
 </body>
+
 </html>
