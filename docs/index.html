@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ising Model Game</title>
+    <meta name="description" content="An interactive web application of the Ising Model Game. Guess spins and map the couplings!">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- Start Menu Screen -->
+        <section id="start-menu" class="screen active">
+            <h1 class="dynamic-title">Ising Game</h1>
+            <div class="menu-buttons">
+                <button class="btn btn-primary" onclick="showScreen('level-select')">Start New Game</button>
+                <button class="btn btn-secondary" onclick="showScreen('tutorial')">Tutorial</button>
+            </div>
+        </section>
+
+        <!-- Level Select Screen -->
+        <section id="level-select" class="screen">
+            <h2>Select Difficulty</h2>
+            <div class="menu-buttons">
+                <button class="btn btn-primary" onclick="startGame(1, 3)">Level 0 (1x3)</button>
+                <button class="btn btn-primary" onclick="startGame(2, 2)">Level 1 (2x2)</button>
+                <button class="btn btn-primary" onclick="startGame(3, 2)">Level 2 (3x2)</button>
+                <button class="btn btn-primary" onclick="startGame(3, 3)">Level 3 (3x3)</button>
+            </div>
+            <button class="btn btn-back" onclick="showScreen('start-menu')">Back</button>
+        </section>
+
+        <!-- Tutorial Screen -->
+        <section id="tutorial" class="screen tutorial-layout">
+            <nav class="top-nav">
+                <button class="btn btn-back" onclick="showScreen('start-menu')">Back to Menu</button>
+            </nav>
+            <h2>Tutorial</h2>
+            <div class="tutorial-content">
+                <h3>Rules:</h3>
+                <ul>
+                    <li>The game has <strong>Arrows</strong> and <strong>Secret Blocks (+ or -)</strong>.</li>
+                    <li>A <span class="text-green">Green Block (+)</span> is happy when its two Arrows point the SAME way.</li>
+                    <li>A <span class="text-red">Red Block (-)</span> is happy when its two Arrows point DIFFERENT ways.</li>
+                    <li>Happy blocks give 0 Energy. Unhappy blocks add 1 to your Energy!</li>
+                    <li>Your goal is to guess all the secret blocks by tracking your Energy!</li>
+                </ul>
+                <h3>Hints:</h3>
+                <ol>
+                    <li>Make all Arrows point the same way to count the Red Blocks (-).</li>
+                    <li>Try changing just one Arrow at a time to see how the Energy changes!</li>
+                </ol>
+            </div>
+        </section>
+
+        <!-- Game Screen -->
+        <section id="game-screen" class="screen game-layout">
+            <nav class="top-nav">
+                <button class="btn btn-back" onclick="showScreen('start-menu')">Back to Menu</button>
+            </nav>
+            <div class="game-body">
+                <!-- Left: Scrollable History of Spins/Grids -->
+                <div class="history-panel" id="history-panel">
+                    <!-- Dynamic grids go here -->
+                </div>
+
+                <!-- Right: Control Panel / Sidebar -->
+                <aside class="control-panel">
+                    <h2 class="panel-title">Ising Game</h2>
+                    <p class="status-text" id="tries-left">Tries left: 0</p>
+                    <div class="panel-actions">
+                        <button class="btn btn-accent pulse" id="btn-submit-spins" onclick="submitSpins()">Submit Spin Guess</button>
+                        <hr class="divider" />
+                        <button class="btn btn-warning" id="btn-guess-couplings" onclick="startCouplingsMode()">Guess Couplings</button>
+                        <button class="btn btn-success disabled" id="btn-submit-couplings" onclick="submitCouplings()" disabled>Submit Couplings</button>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+    </div>
+    
+    <!-- Modal for game over / viewing solution -->
+    <div id="solution-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title" class="text-red">Wrong Guess!</h2>
+            <p id="modal-desc">Here were the correct couplings:</p>
+            <div id="modal-grid-container" class="grid-container locked-grid"></div>
+            <button class="btn btn-secondary mt-4" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- Fireworks Canvas overlay -->
+    <canvas id="fireworks-canvas"></canvas>
+
+    <script src="script.js"></script>
+</body>
+</html>
