@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ising Model Game</title>
-    <meta name="description" content="An interactive web application of the Ising Model Game. Guess spins and map the couplings!">
+    <meta name="description"
+        content="An interactive web application of the Ising Model Game. Guess spins and map the couplings!">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div id="app" class="app-container">
         <!-- Start Menu Screen -->
@@ -47,11 +50,15 @@
                     <h2 class="panel-title">Ising Game</h2>
                     <p class="status-text" id="tries-left">Tries left: 0</p>
                     <div class="panel-actions">
-                        <button class="btn btn-accent pulse" id="btn-submit-spins" onclick="submitSpins()">Submit Spin Guess</button>
+                        <button class="btn btn-accent pulse" id="btn-submit-spins" onclick="submitSpins()">Submit
+                            Spins</button>
                         <hr class="divider" />
-                        <button class="btn btn-warning" id="btn-guess-couplings" onclick="startCouplingsMode()">Guess Couplings</button>
-                        <button class="btn btn-secondary" id="btn-cancel-couplings" onclick="cancelCouplingsMode()" style="display: none;">Cancel</button>
-                        <button class="btn btn-success disabled" id="btn-submit-couplings" onclick="submitCouplings()" disabled>Submit Couplings</button>
+                        <button class="btn btn-warning" id="btn-guess-couplings" onclick="startCouplingsMode()">Guess
+                            Couplings</button>
+                        <button class="btn btn-secondary" id="btn-cancel-couplings" onclick="cancelCouplingsMode()"
+                            style="display: none;">Cancel</button>
+                        <button class="btn btn-success disabled" id="btn-submit-couplings" onclick="submitCouplings()"
+                            disabled>Submit Couplings</button>
                     </div>
                 </aside>
             </div>
@@ -72,7 +79,7 @@
         </section>
 
     </div>
-    
+
     <!-- Modal for game over / viewing solution -->
     <div id="solution-modal" class="modal">
         <div class="modal-content">
@@ -97,4 +104,5 @@
         }
     </script>
 </body>
+
 </html>
