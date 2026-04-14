@@ -46,14 +46,28 @@
                 <aside class="control-panel">
                     <h2 class="panel-title">Ising Game</h2>
                     <p class="status-text" id="tries-left">Tries left: 0</p>
-                    <div class="panel-actions">
                         <button class="btn btn-accent pulse" id="btn-submit-spins" onclick="submitSpins()">Submit Spin Guess</button>
                         <hr class="divider" />
                         <button class="btn btn-warning" id="btn-guess-couplings" onclick="startCouplingsMode()">Guess Couplings</button>
+                        <button class="btn btn-secondary" id="btn-cancel-couplings" onclick="cancelCouplingsMode()" style="display: none;">Cancel</button>
                         <button class="btn btn-success disabled" id="btn-submit-couplings" onclick="submitCouplings()" disabled>Submit Couplings</button>
                     </div>
                 </aside>
             </div>
+        </section>
+
+        <!-- Win Screen -->
+        <section id="win-screen" class="screen">
+            <h2 class="text-green">Congratulations on your win!</h2>
+            <p style="font-size: 1.5rem; margin-bottom: 2rem;">Would you like to try again?</p>
+            <button class="btn btn-primary" onclick="showScreen('level-select')">Play Again</button>
+        </section>
+
+        <!-- Lose Screen -->
+        <section id="lose-screen" class="screen">
+            <h2 class="text-red">You ran out of tries and lost!</h2>
+            <p style="font-size: 1.5rem; margin-bottom: 2rem;">Would you like to try again?</p>
+            <button class="btn btn-primary" onclick="showScreen('level-select')">Play Again</button>
         </section>
 
     </div>
@@ -72,5 +86,14 @@
     <canvas id="fireworks-canvas"></canvas>
 
     <script src="script.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const screenParam = urlParams.get('screen');
+        if (screenParam) {
+            showScreen(screenParam);
+            // Optionally clean up URL so refreshing doesn't stick
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    </script>
 </body>
 </html>

@@ -222,6 +222,8 @@ function startCouplingsMode() {
     
     document.getElementById('btn-submit-spins').disabled = true;
     document.getElementById('btn-guess-couplings').disabled = true;
+    
+    document.getElementById('btn-cancel-couplings').style.display = 'inline-block';
     document.getElementById('btn-submit-couplings').disabled = false;
     
     let label = document.getElementById(`energy-${gridCounter}`);
@@ -236,6 +238,34 @@ function startCouplingsMode() {
     }
 }
 
+function cancelCouplingsMode() {
+    inputState = 'SPINS';
+    
+    document.getElementById('btn-submit-spins').disabled = false;
+    document.getElementById('btn-guess-couplings').disabled = false;
+    
+    document.getElementById('btn-cancel-couplings').style.display = 'none';
+    document.getElementById('btn-submit-couplings').disabled = true;
+    
+    // Reset specific couplings inputs visually
+    activeCouplings.fill(null);
+    let activeGrid = document.querySelector('.active-grid');
+    if (activeGrid) {
+        activeGrid.classList.remove('mode-couplings');
+        let comps = activeGrid.querySelectorAll('.coupling');
+        comps.forEach(comp => {
+            delete comp.dataset.val;
+            comp.innerText = "";
+        });
+    }
+    
+    let label = document.getElementById(`energy-${gridCounter}`);
+    if (label) {
+        label.innerText = `Energy: ${getEnergy(activeSpins, solutionCouplings)}`;
+        label.style.color = ""; // reset color
+    }
+}
+
 function submitCouplings() {
     if (activeCouplings.includes(null)) {
         alert("Please assign (+ or -) to all bonds by clicking the grey blocks!");
@@ -244,6 +274,7 @@ function submitCouplings() {
     
     let correct = activeCouplings.every((val, index) => val === solutionCouplings[index]);
     
+    document.getElementById('btn-cancel-couplings').style.display = 'none';
     document.getElementById('btn-submit-couplings').disabled = true;
     let activeGrid = document.querySelector('.active-grid');
     if(activeGrid) activeGrid.classList.remove('active-grid');
@@ -293,7 +324,7 @@ function showSolutionModal() {
 
 function closeModal() {
     document.getElementById('solution-modal').classList.remove('show');
-    showScreen('start-menu');
+    showScreen('lose-screen');
 }
 
 // --- Fireworks Animation ---
@@ -345,7 +376,7 @@ function startFireworks() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         particles = [];
         youWinMsg.remove();
-        showScreen('start-menu'); // return to menu
+        showScreen('win-screen'); // route to win screen
     }, 5000);
 }
 
