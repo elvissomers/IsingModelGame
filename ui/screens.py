@@ -2,8 +2,11 @@ import tkinter as tk
 from constants import (
     COLOR_DARK_BLUE, COLOR_LIGHT_GRAY, COLOR_BLUE, COLOR_DARK_BLUE_HOVER,
     COLOR_ORANGE, COLOR_ORANGE_HOVER, COLOR_RED, COLOR_RED_HOVER,
-    COLOR_GRAY, COLOR_GRAY_HOVER, TUTORIAL_TEXT
+    COLOR_GRAY, COLOR_GRAY_HOVER
 )
+import json
+import os
+from ui.spin_grid import SpinGridCanvas
 
 class StartMenu(tk.Frame):
     def __init__(self, parent, controller):
@@ -61,7 +64,18 @@ class TutorialScreen(tk.Frame):
     def __init__(self, parent, controller):
         super().__init__(parent, bg=COLOR_DARK_BLUE)
         self.controller = controller
+        self.current_page = 0
         
+        # Load tutorial contents
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        json_path = os.path.join(current_dir, "..", "assets", "tutorial.json")
+        try:
+            with open(json_path, "r") as f:
+                self.pages = json.load(f)
+        except Exception as e:
+            print(f"Error loading tutorial: {e}")
+            self.pages = [{"text": "Error loading tutorial.", "grids": []}]
+            
         top_frame = tk.Frame(self, bg=COLOR_DARK_BLUE)
         top_frame.pack(fill="x", padx=20, pady=20)
         
@@ -72,7 +86,71 @@ class TutorialScreen(tk.Frame):
         back_btn.pack(side="right")
         
         title = tk.Label(self, text="Tutorial", font=("Arial", 48, "bold"), bg=COLOR_DARK_BLUE, fg=COLOR_LIGHT_GRAY)
-        title.pack(pady=(50, 20))
+        title.pack(pady=(10, 10))
         
-        content = tk.Label(self, text=TUTORIAL_TEXT, font=("Arial", 22), bg=COLOR_DARK_BLUE, fg=COLOR_LIGHT_GRAY, justify="left")
-        content.pack(pady=30, padx=40)
+        self.content_frame = tk.Frame(self, bg=COLOR_DARK_BLUE)
+        self.content_frame.pack(fill="both", expand=True, padx=40, pady=10)
+        
+        nav_frame = tk.Frame(self, bg=COLOR_DARK_BLUE)
+        nav_frame.pack(fill="x", pady=20)
+        
+        self.prev_btn = tk.Button(nav_frame, text="◀ Previous", command=self.prev_page, font=("Arial", 18), bg=COLOR_BLUE, fg="white", activebackground=COLOR_DARK_BLUE_HOVER, relief="flat", padx=20, pady=10, width=12)
+        self.prev_btn.pack(side="left", padx=50)
+        
+        self.page_label = tk.Label(nav_frame, text="", font=("Arial", 18), bg=COLOR_DARK_BLUE, fg=COLOR_LIGHT_GRAY)
+        self.page_label.pack(side="left", expand=True)
+        
+        self.next_btn = tk.Button(nav_frame, text="Next ▶", command=self.next_page, font=("Arial", 18), bg=COLOR_BLUE, fg="white", activebackground=COLOR_DARK_BLUE_HOVER, relief="flat", padx=20, pady=10, width=12)
+        self.next_btn.pack(side="right", padx=50)
+        
+        self.render_page()
+        
+    def prev_page(self):
+        if self.current_page > 0:
+            self.current_page -= 1
+            self.render_page()
+            
+    def next_page(self):
+        if self.current_page < len(self.pages) - 1:
+            self.current_page += 1
+            self.render_page()
+            
+    def render_page(self):
+        for widget in self.content_frame.winfo_children():
+            widget.destroy()
+            
+        page = self.pages[self.current_page]
+        
+        text_label = tk.Label(self.content_frame, text=page["text"], font=("Arial", 22), bg=COLOR_DARK_BLUE, fg=COLOR_LIGHT_GRAY, justify="left", wraplength=1000)
+        text_label.pack(pady=(0, 20))
+        
+        grids_frame = tk.Frame(self.content_frame, bg=COLOR_DARK_BLUE)
+        grids_frame.pack(pady=10)
+        
+        for grid_data in page.get("grids", []):
+            item_frame = tk.Frame(grids_frame, bg=COLOR_DARK_BLUE)
+            item_frame.pack(side="left", padx=30)
+            
+            spin_canvas = SpinGridCanvas(
+                item_frame, 
+                mode=grid_data["mode"], 
+                height_cells=grid_data["height"], 
+                width_cells=grid_data["width"]
+            )
+            spin_canvas.spins = grid_data["spins"]
+            spin_canvas.couplings = grid_data["couplings"]
+            spin_canvas.draw_grid()
+            spin_canvas.pack()
+            
+            if grid_data.get("label"):
+                label = tk.Label(item_frame, text=grid_data["label"], font=("Arial", 16, "bold"), bg=COLOR_DARK_BLUE, fg=COLOR_LIGHT_GRAY)
+                label.pack(pady=10)
+                
+        # Update navigation
+        self.prev_btn["state"] = tk.NORMAL if self.current_page > 0 else tk.DISABLED
+        self.prev_btn["bg"] = COLOR_BLUE if self.current_page > 0 else COLOR_GRAY
+        
+        self.next_btn["state"] = tk.NORMAL if self.current_page < len(self.pages) - 1 else tk.DISABLED
+        self.next_btn["bg"] = COLOR_BLUE if self.current_page < len(self.pages) - 1 else COLOR_GRAY
+        
+        self.page_label["text"] = f"Page {self.current_page + 1} of {len(self.pages)}"

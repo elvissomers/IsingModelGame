@@ -1,15 +1,5 @@
 # Application texts
-TUTORIAL_TEXT = (
-    "Rules:\n"
-    "• The game has Arrows and Secret Blocks (+ or -).\n"
-    "• A Green Block (+) is happy when its two Arrows point the SAME way.\n"
-    "• A Red Block (-) is happy when its two Arrows point DIFFERENT ways.\n"
-    "• Happy blocks give 0 Energy. Unhappy blocks add 1 to your Energy!\n"
-    "• Your goal is to guess all the secret blocks by tracking your Energy!\n\n"
-    "Hints:\n"
-    "1) Make all Arrows point the same way to count the Red Blocks (-).\n"
-    "2) Try changing just one Arrow at a time to see how the Energy changes!"
-)
+# Removed TUTORIAL_TEXT, game now uses assets/tutorial.json
 
 # Colors
 COLOR_DARK_BLUE = "#2C3E50"
