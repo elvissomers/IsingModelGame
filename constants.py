@@ -1,6 +1,3 @@
-# Application texts
-# Removed TUTORIAL_TEXT, game now uses assets/tutorial.json
-
 # Colors
 COLOR_DARK_BLUE = "#2C3E50"
 COLOR_LIGHT_GRAY = "#ECF0F1"
