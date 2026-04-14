@@ -5,4 +5,5 @@ How to play:
    (If not on windows, you can download the project and run main.py if you have python installed)
 2) The game runs in the command line. You can guess the configuration (spin up = 1; spin down = 0) and will get back the energy for that configuration.
 3) Based on the energies for the configurations, you can guess which coupling constants are positive, and which are negative.
-4) Have fun!
+4) Have fun playing at https://elvissomers.github.io/IsingModelGame/
+
