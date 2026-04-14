@@ -68,7 +68,7 @@ class TutorialScreen(tk.Frame):
         
         # Load tutorial contents
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        json_path = os.path.join(current_dir, "..", "assets", "tutorial.json")
+        json_path = os.path.join(current_dir, "..", "assets", "tutorial-python.json")
         try:
             with open(json_path, "r") as f:
                 self.pages = json.load(f)
