@@ -261,7 +261,7 @@ function cancelCouplingsMode() {
     
     let label = document.getElementById(`energy-${gridCounter}`);
     if (label) {
-        label.innerText = `Energy: ${getEnergy(activeSpins, solutionCouplings)}`;
+        label.innerText = `Energy: ?`;
         label.style.color = ""; // reset color
     }
 }
