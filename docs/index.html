@@ -15,7 +15,7 @@
             <h1 class="dynamic-title">Ising Game</h1>
             <div class="menu-buttons">
                 <button class="btn btn-primary" onclick="showScreen('level-select')">Start New Game</button>
-                <button class="btn btn-secondary" onclick="showScreen('tutorial')">Tutorial</button>
+                <button class="btn btn-secondary" onclick="window.location.href='tutorial-1.html'">Tutorial</button>
             </div>
         </section>
 
@@ -29,29 +29,6 @@
                 <button class="btn btn-primary" onclick="startGame(3, 3)">Level 3 (3x3)</button>
             </div>
             <button class="btn btn-back" onclick="showScreen('start-menu')">Back</button>
-        </section>
-
-        <!-- Tutorial Screen -->
-        <section id="tutorial" class="screen tutorial-layout">
-            <nav class="top-nav">
-                <button class="btn btn-back" onclick="showScreen('start-menu')">Back to Menu</button>
-            </nav>
-            <h2>Tutorial</h2>
-            <div class="tutorial-content">
-                <h3>Rules:</h3>
-                <ul>
-                    <li>The game has <strong>Arrows</strong> and <strong>Secret Blocks (+ or -)</strong>.</li>
-                    <li>A <span class="text-green">Green Block (+)</span> is happy when its two Arrows point the SAME way.</li>
-                    <li>A <span class="text-red">Red Block (-)</span> is happy when its two Arrows point DIFFERENT ways.</li>
-                    <li>Happy blocks give 0 Energy. Unhappy blocks add 1 to your Energy!</li>
-                    <li>Your goal is to guess all the secret blocks by tracking your Energy!</li>
-                </ul>
-                <h3>Hints:</h3>
-                <ol>
-                    <li>Make all Arrows point the same way to count the Red Blocks (-).</li>
-                    <li>Try changing just one Arrow at a time to see how the Energy changes!</li>
-                </ol>
-            </div>
         </section>
 
         <!-- Game Screen -->

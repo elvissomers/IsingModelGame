@@ -1,0 +1,131 @@
+[
+    {
+        "text": "Welcome to the Ising Model Game!\n\nIn this game, you will be exploring a grid of spins. Every \"spin\" can point either \"up\" or \"down\".\n\nClick on the arrows below to toggle them!",
+        "grids": [
+            {
+                "width": 2,
+                "height": 1,
+                "mode": "SPINS",
+                "spins": [
+                    [
+                        1,
+                        0
+                    ]
+                ],
+                "couplings": [
+                    null
+                ],
+                "label": "Click arrows to toggle"
+            }
+        ]
+    },
+    {
+        "text": "Between the spins, there are \"couplings\".\n\nA coupling can be \"negative\" or \"positive\".",
+        "grids": [
+            {
+                "width": 2,
+                "height": 1,
+                "mode": "LOCKED",
+                "spins": [
+                    [
+                        1,
+                        1
+                    ]
+                ],
+                "couplings": [
+                    0
+                ],
+                "label": "Negative Coupling"
+            },
+            {
+                "width": 2,
+                "height": 1,
+                "mode": "LOCKED",
+                "spins": [
+                    [
+                        1,
+                        1
+                    ]
+                ],
+                "couplings": [
+                    1
+                ],
+                "label": "Positive Coupling"
+            }
+        ]
+    },
+    {
+        "text": "Every configuration has a certain amount of energy. The energy is given by the couplings.\n\nIf the coupling is negative, the energy will be 0 when the two arrows point in different directions.\n\nBut the energy will be 1 when the two arrows point in the same direction.",
+        "grids": [
+            {
+                "width": 2,
+                "height": 1,
+                "mode": "LOCKED",
+                "spins": [
+                    [
+                        1,
+                        0
+                    ]
+                ],
+                "couplings": [
+                    0
+                ],
+                "label": "Energy = 0"
+            },
+            {
+                "width": 2,
+                "height": 1,
+                "mode": "LOCKED",
+                "spins": [
+                    [
+                        1,
+                        1
+                    ]
+                ],
+                "couplings": [
+                    0
+                ],
+                "label": "Energy = 1"
+            }
+        ]
+    },
+    {
+        "text": "If the coupling is positive, the situation is reversed!\n\nThe energy will be 0 when the arrows point in the same direction.\nBut it will be 1 when they point in different directions!",
+        "grids": [
+            {
+                "width": 2,
+                "height": 1,
+                "mode": "LOCKED",
+                "spins": [
+                    [
+                        1,
+                        1
+                    ]
+                ],
+                "couplings": [
+                    1
+                ],
+                "label": "Energy = 0"
+            },
+            {
+                "width": 2,
+                "height": 1,
+                "mode": "LOCKED",
+                "spins": [
+                    [
+                        1,
+                        0
+                    ]
+                ],
+                "couplings": [
+                    1
+                ],
+                "label": "Energy = 1"
+            }
+        ]
+    },
+    {
+        "text": "Using this information, try to see what energy you get for a specific configuration!\n\nUsing multiple configurations, you can figure out whether the couplings are positive or negative.\n\nBut be careful! You only get one guess.",
+        "grids": []
+    }
+]
