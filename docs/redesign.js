@@ -35,6 +35,11 @@ function startGame(height, width) {
     
     document.getElementById('btn-submit-spins').disabled = false;
     document.getElementById('btn-guess-couplings').disabled = false;
+    document.getElementById('btn-guess-couplings').style.display = 'block';
+    
+    let btnBack = document.getElementById('btn-back-spins');
+    if (btnBack) btnBack.style.display = 'none';
+    
     document.getElementById('btn-submit-couplings').disabled = true;
     
     updateUI();
@@ -222,7 +227,17 @@ function startCouplingsMode() {
     inputState = 'COUPLINGS';
     
     document.getElementById('btn-submit-spins').disabled = true;
-    document.getElementById('btn-guess-couplings').disabled = true;
+    document.getElementById('btn-guess-couplings').style.display = 'none';
+    
+    let btnBack = document.getElementById('btn-back-spins');
+    if (btnBack) {
+        if (remainingTries > 0) {
+            btnBack.style.display = 'block';
+        } else {
+            btnBack.style.display = 'none';
+        }
+    }
+    
     document.getElementById('btn-submit-couplings').disabled = false;
     
     let label = document.getElementById(`energy-${gridCounter}`);
@@ -234,6 +249,30 @@ function startCouplingsMode() {
     let activeGrid = document.querySelector('.active-grid');
     if (activeGrid) {
         activeGrid.classList.add('mode-couplings');
+    }
+}
+
+function backToSpinsMode() {
+    inputState = 'SPINS';
+    
+    document.getElementById('btn-submit-spins').disabled = false;
+    document.getElementById('btn-guess-couplings').style.display = 'block';
+    
+    let btnBack = document.getElementById('btn-back-spins');
+    if (btnBack) btnBack.style.display = 'none';
+    
+    document.getElementById('btn-submit-couplings').disabled = true;
+    
+    let energy = getEnergy(activeSpins, solutionCouplings);
+    let label = document.getElementById(`energy-${gridCounter}`);
+    if (label) {
+        label.innerText = `Energy: ${energy}`;
+        label.style.color = "var(--warning)";
+    }
+    
+    let activeGrid = document.querySelector('.active-grid');
+    if (activeGrid) {
+        activeGrid.classList.remove('mode-couplings');
     }
 }
 
