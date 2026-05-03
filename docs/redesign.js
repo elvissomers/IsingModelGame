@@ -13,7 +13,8 @@ let activeCouplings = [];
 
 const cellSize = 60;
 const margin = 40;
-const gap = 30;
+const gap = 80;
+
 
 // Utility functions
 function showScreen(screenId) {

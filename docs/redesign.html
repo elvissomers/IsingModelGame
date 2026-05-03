@@ -5,17 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ising Model Game</title>
     <meta name="description" content="An interactive web application of the Ising Model Game. Guess spins and map the couplings!">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="redesign.css">
 </head>
 <body>
     <div id="app" class="app-container">
         <!-- Start Menu Screen -->
-        <section id="start-menu" class="screen active">
-            <h1 class="dynamic-title">Ising Game</h1>
-            <div class="menu-buttons">
-                <button class="btn btn-primary" onclick="showScreen('level-select')">Start New Game</button>
-                <button class="btn btn-secondary" onclick="showScreen('tutorial')">Tutorial</button>
+        <section id="start-menu" class="screen active start-layout">
+            <div class="left-panel">
+                <h1 class="dynamic-title">ISING<br>GAME.</h1>
+                <div class="menu-buttons">
+                    <button class="btn btn-primary" onclick="showScreen('level-select')">▶ PLAY ◀</button>
+                    <button class="btn btn-secondary" onclick="showScreen('tutorial')">TUTORIAL</button>
+                </div>
+            </div>
+            <div class="right-panel">
+                <div class="decorative-grid">
+                    <!-- Row 1 -->
+                    <div class="box arrow down"></div>
+                    <div class="box coupling" data-val="0">-</div>
+                    <div class="box arrow down"></div>
+                    <div class="box coupling" data-val="1">+</div>
+                    <div class="box arrow down"></div>
+                    <!-- Row 2 -->
+                    <div class="box coupling" data-val="0">-</div>
+                    <div class="box arrow down"></div>
+                    <div class="box coupling" data-val="0">-</div>
+                    <div class="box arrow down"></div>
+                    <div class="box coupling" data-val="1">+</div>
+                    <!-- Row 3 -->
+                    <div class="box arrow up"></div>
+                    <div class="box coupling" data-val="1">+</div>
+                    <div class="box arrow up"></div>
+                    <div class="box coupling" data-val="1">+</div>
+                    <div class="box arrow down"></div>
+                    <!-- Row 4 -->
+                    <div class="box coupling" data-val="1">+</div>
+                    <div class="box arrow up"></div>
+                    <div class="box coupling" data-val="1">+</div>
+                    <div class="box arrow down"></div>
+                    <div class="box coupling" data-val="1">+</div>
+                    <!-- Row 5 -->
+                    <div class="box arrow up"></div>
+                    <div class="box coupling" data-val="0">-</div>
+                    <div class="box arrow up"></div>
+                    <div class="box coupling" data-val="0">-</div>
+                    <div class="box arrow down"></div>
+                </div>
             </div>
         </section>
 
@@ -94,6 +130,6 @@
     <!-- Fireworks Canvas overlay -->
     <canvas id="fireworks-canvas"></canvas>
 
-    <script src="script.js"></script>
+    <script src="redesign.js"></script>
 </body>
 </html>
