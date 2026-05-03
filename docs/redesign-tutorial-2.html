@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ising Tutorial - Page 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="redesign.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <section class="screen active tutorial-layout" style="display:flex; flex-direction:column; align-items:center;">
+            <nav class="top-nav" style="width:100%; display:flex; justify-content:space-between; padding:20px;">
+                <button class="btn btn-secondary" onclick="window.location.href='redesign.html'">Quit Tutorial</button>
+                <div style="color:var(--text-color); font-size:1.2rem; align-self:center;">Page 2 of 5</div>
+            </nav>
+            <h2 style="margin-top:20px; font-size:3rem; color:var(--text-color);">Tutorial</h2>
+            
+            <div class="tutorial-content" style="text-align:center; max-width:1000px; margin-top:20px;">
+                <p style="font-size: 1.5rem; white-space: pre-wrap; color:var(--text-color); line-height:1.6;">Between the spins, there are "couplings".
+
+A coupling can be "negative" or "positive".</p>
+                <div id="grids-container" style="display:flex; justify-content:center; gap:40px; margin-top:40px;">
+                </div>
+            </div>
+            
+            <div style="margin-top:40px; display:flex; gap:20px; padding-bottom:50px;">
+                <button class="btn btn-primary" onclick="window.location.href='redesign-tutorial-1.html'">◀ Previous</button>
+                <button class="btn btn-primary" onclick="window.location.href='redesign-tutorial-3.html'">Next ▶</button>
+            </div>
+        </section>
+    </div>
+    <script src="redesign-tutorial.js"></script>
+    <script>
+        initTutorialPage(1);
+    </script>
+</body>
+</html>
+
