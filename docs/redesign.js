@@ -263,10 +263,9 @@ function backToSpinsMode() {
     
     document.getElementById('btn-submit-couplings').disabled = true;
     
-    let energy = getEnergy(activeSpins, solutionCouplings);
     let label = document.getElementById(`energy-${gridCounter}`);
     if (label) {
-        label.innerText = `Energy: ${energy}`;
+        label.innerText = `Energy: ?`;
         label.style.color = "var(--warning)";
     }
     
